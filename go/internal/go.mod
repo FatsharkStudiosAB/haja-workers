@@ -1,4 +1,4 @@
-module github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal
+module github.com/FatsharkStudiosAB/haja-workers/go/internal
 
 go 1.23.1
 

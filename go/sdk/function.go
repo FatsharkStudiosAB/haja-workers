@@ -3,9 +3,9 @@ package sdk
 import (
 	"time"
 
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/basefunction"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/state"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/basefunction"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 )
 
 // FunctionBuilder defines the interface for building functions

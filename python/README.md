@@ -23,8 +23,8 @@ This project consists of two Python packages:
 
 ```bash
 # Clone the repository
-git clone https://github.com/FatsharkStudiosAB/codex.git
-cd codex/workflows/workers/python
+git clone https://github.com/FatsharkStudiosAB/haja-workers.git
+cd haja-workers/python
 
 # Create virtual environment
 python -m venv .venv
@@ -47,10 +47,10 @@ If you have the code locally but want to install as packages:
 
 ```bash
 # Install SDK first
-pip install /path/to/codex/workflows/workers/python/sdk
+pip install /path/to/haja-workers/python/sdk
 
 # Install server (includes SDK dependency)
-pip install /path/to/codex/workflows/workers/python/server
+pip install /path/to/haja-workers/python/server
 
 # Run
 codex-worker
@@ -61,7 +61,7 @@ codex-worker
 For active development:
 
 ```bash
-cd codex/workflows/workers/python
+cd haja-workers/python
 
 # Install in editable mode with development dependencies
 pip install -e "./sdk[dev]"
@@ -169,8 +169,8 @@ docker run -e SERVER_NAME=my-worker \
 
 ```bash
 # Clone repository
-git clone https://github.com/FatsharkStudiosAB/codex.git
-cd codex/workflows/workers/python
+git clone https://github.com/FatsharkStudiosAB/haja-workers.git
+cd haja-workers/python
 
 # Create development environment
 python -m venv .venv
@@ -303,10 +303,10 @@ When published to a Git repository:
 
 ```bash
 # Install SDK
-pip install git+https://github.com/FatsharkStudiosAB/codex.git#subdirectory=workflows/workers/python/sdk
+pip install git+https://github.com/FatsharkStudiosAB/haja-workers.git#subdirectory=python/sdk
 
 # Install server  
-pip install git+https://github.com/FatsharkStudiosAB/codex.git#subdirectory=workflows/workers/python/server
+pip install git+https://github.com/FatsharkStudiosAB/haja-workers.git#subdirectory=python/server
 ```
 
 ## Troubleshooting

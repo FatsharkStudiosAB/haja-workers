@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	sdk "github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/state"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
+	sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 )
 
 type StoreChatHistoryInputs struct {

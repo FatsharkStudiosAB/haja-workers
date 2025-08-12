@@ -1,13 +1,13 @@
 package state
 
 import (
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/basefunction"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/communication"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/dispatcher"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/grpccache"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/grpcstore"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/maps"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/rpc"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/basefunction"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/communication"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/dispatcher"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/grpccache"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/grpcstore"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/maps"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/rpc"
 )
 
 type GlobalState struct {

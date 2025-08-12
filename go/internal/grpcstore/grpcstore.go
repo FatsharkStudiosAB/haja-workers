@@ -3,10 +3,10 @@ package grpcstore
 import (
 	"context"
 	"fmt"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/communication"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/correlation"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/utils"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/communication"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/correlation"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/utils"
 	"time"
 )
 

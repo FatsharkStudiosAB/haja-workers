@@ -3,9 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/basefunction"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/state"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/basefunction"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 	"log"
 )
 

@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	sdk "github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/worker/examples"
+	sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+	"github.com/FatsharkStudiosAB/haja-workers/go/worker/examples"
 
 	"github.com/joho/godotenv"
 )

@@ -23,8 +23,8 @@ This project follows Go project layout conventions with clear separation of conc
 
 ```bash
 # Clone the repository
-git clone https://github.com/FatsharkStudiosAB/codex.git
-cd codex/workflows/workers/go
+git clone https://github.com/FatsharkStudiosAB/haja-workers.git
+cd haja-workers/go
 
 # Build the worker
 cd cmd/worker
@@ -42,7 +42,7 @@ export SERVER_API_TOKEN="your-token-here"
 ```bash
 # In your Go project
 go mod init my-worker
-go get github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk@latest
+go get github.com/FatsharkStudiosAB/haja-workers/go/sdk@latest
 
 # Create main.go (see example below)
 go run main.go
@@ -58,9 +58,9 @@ package main
 import (
     "log"
     
-    sdk "github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk"
-    "github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
-    "github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/state"
+    sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+    "github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
+    "github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
 )
 
 type GreetingInput struct {
@@ -166,8 +166,8 @@ Following Go project layout conventions, the codebase is organized as follows:
 
 ```bash
 # Clone and navigate
-git clone https://github.com/FatsharkStudiosAB/codex.git
-cd codex/workflows/workers/go
+git clone https://github.com/FatsharkStudiosAB/haja-workers.git
+cd haja-workers/go
 
 # Install dependencies for all modules
 cd internal && go mod tidy
@@ -233,8 +233,8 @@ workflows/workers/go/
 ### Common Issues
 
 **Import Resolution Errors**: Make sure you're using the correct module paths:
-- SDK: `github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk`
-- Internal packages: `github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/...` (only for internal development)
+- SDK: `github.com/FatsharkStudiosAB/haja-workers/go/sdk`
+- Internal packages: `github.com/FatsharkStudiosAB/haja-workers/go/internal/...` (only for internal development)
 
 **Connection Failures**: Verify your `GRPC_SERVER_ADDRESS` points to a running Codex Workflows server.
 

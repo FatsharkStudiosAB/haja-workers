@@ -19,13 +19,13 @@ A lightweight SDK for building Codex workflow workers in Python. Provides gRPC c
 python -m venv .venv && source .venv/bin/activate
 
 # Pin to a tag or commit for reproducibility (replace v0.1.0 with your tag)
-pip install "git+https://github.com/FatsharkStudiosAB/codex@v0.1.0#subdirectory=workflows/workers/python/sdk"
+pip install "git+https://github.com/FatsharkStudiosAB/haja-workers@v0.1.0#subdirectory=python/sdk"
 ```
 
 ### From GitHub (SSH, private repo)
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install "git+ssh://git@github.com/FatsharkStudiosAB/codex.git@v0.1.0#subdirectory=workflows/workers/python/sdk"
+pip install "git+ssh://git@github.com/FatsharkStudiosAB/haja-workers.git@v0.1.0#subdirectory=python/sdk"
 ```
 
 ### Local development

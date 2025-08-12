@@ -1,7 +1,7 @@
 package workflowsgrpc
 
 import (
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 
 	"google.golang.org/protobuf/types/known/structpb"
 )

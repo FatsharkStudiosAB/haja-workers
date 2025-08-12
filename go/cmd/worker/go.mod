@@ -1,4 +1,4 @@
-module github.com/FatsharkStudiosAB/codex/workflows/workers/go/worker
+module github.com/FatsharkStudiosAB/haja-workers/go/worker
 
 go 1.23.1
 
@@ -20,11 +20,11 @@ require (
 )
 
 require (
-	github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal v0.0.0
-	github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk v0.0.0
+	github.com/FatsharkStudiosAB/haja-workers/go/internal v0.0.0
+	github.com/FatsharkStudiosAB/haja-workers/go/sdk v0.0.0
 	google.golang.org/grpc v1.64.0
 )
 
-replace github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk => ../../sdk
+replace github.com/FatsharkStudiosAB/haja-workers/go/sdk => ../../sdk
 
-replace github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal => ../../internal
+replace github.com/FatsharkStudiosAB/haja-workers/go/internal => ../../internal

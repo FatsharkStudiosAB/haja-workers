@@ -1,8 +1,8 @@
 package main
 
 // import (
-// 	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/worker/endpoints"
-// 	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/state"
+// 	"github.com/FatsharkStudiosAB/haja-workers/go/worker/endpoints"
+// 	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
 
 // 	"github.com/gofiber/fiber/v2"
 // 	"github.com/gofiber/fiber/v2/middleware/logger"

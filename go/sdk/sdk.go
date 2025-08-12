@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/basefunction"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/dispatcher"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/handlers"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/rpc"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/state"
-	"github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal/types"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/basefunction"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/dispatcher"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/handlers"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/rpc"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
+	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 
 	"github.com/joho/godotenv"
 )

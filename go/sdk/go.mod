@@ -1,9 +1,9 @@
-module github.com/FatsharkStudiosAB/codex/workflows/workers/go/sdk
+module github.com/FatsharkStudiosAB/haja-workers/go/sdk
 
 go 1.23.1
 
 require (
-	github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal v0.0.0
+	github.com/FatsharkStudiosAB/haja-workers/go/internal v0.0.0
 	github.com/joho/godotenv v1.5.1
 )
 
@@ -21,4 +21,4 @@ require (
 	google.golang.org/protobuf v1.34.1 // indirect
 )
 
-replace github.com/FatsharkStudiosAB/codex/workflows/workers/go/internal => ../internal
+replace github.com/FatsharkStudiosAB/haja-workers/go/internal => ../internal
