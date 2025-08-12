@@ -1,0 +1,85 @@
+Metadata-Version: 2.4
+Name: codex-workers-sdk-py
+Version: 0.1.0
+Summary: Codex Workflows Python Workers SDK
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: grpcio>=1.60
+Requires-Dist: grpcio-tools>=1.60
+Requires-Dist: pydantic>=2
+
+# Codex Workflows Python Workers SDK
+
+A lightweight SDK for building Codex workflow workers in Python. Provides gRPC communication, state, handlers, and typed function helpers.
+
+## Install
+
+### From GitHub (recommended)
+```bash
+python -m venv .venv && source .venv/bin/activate
+
+# Pin to a tag or commit for reproducibility (replace v0.1.0 with your tag)
+pip install "git+https://github.com/FatsharkStudiosAB/codex@v0.1.0#subdirectory=workflows/workers/python/sdk"
+```
+
+### From GitHub (SSH, private repo)
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install "git+ssh://git@github.com/FatsharkStudiosAB/codex.git@v0.1.0#subdirectory=workflows/workers/python/sdk"
+```
+
+### Local development
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e /home/erik/development/codex/workflows/workers/python/sdk
+```
+
+## Quick start
+```python
+from dataclasses import dataclass
+from codex_workers_sdk.sdk import Server
+from codex_workers_sdk.function import Function
+
+@dataclass
+class GreetingInput:
+    name: str
+
+@dataclass
+class GreetingOutput:
+    message: str
+
+def greeting_function() -> Function[GreetingInput, GreetingOutput]:
+    fn = Function[GreetingInput, GreetingOutput](
+        name="greeting",
+        version="1.0.0",
+        description="Greets the provided name",
+    )
+
+    async def handler(inputs: GreetingInput, _event, _gs) -> GreetingOutput:
+        return GreetingOutput(message=f"Hello, {inputs.name}!")
+
+    return fn.with_handler(handler)
+
+async def main() -> None:
+    server = Server()
+    server.register_function(greeting_function())
+    await server.start()
+```
+
+## Environment
+Set via environment variables (defaults shown):
+```bash
+export SERVER_NAME="python-execution-server"
+export GRPC_SERVER_ADDRESS="localhost:9090"
+export SERVER_API_TOKEN=""  # optional
+```
+
+## Requirements
+- Python 3.10+
+- grpcio / grpcio-tools
+
+## Troubleshooting
+- If imports fail, ensure your virtualenv is activated and the package is installed (editable or from GitHub).
+- For private GitHub, prefer SSH URLs or configure a PAT for HTTPS.
+
+
