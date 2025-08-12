@@ -1,0 +1,19 @@
+[project]
+name = "codex-workers-server-py"
+version = "0.1.0"
+description = "Codex Workflows Python Worker Server"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+codex-worker = "codex_workers_server.main:main"
+
+

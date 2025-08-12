@@ -1,13 +1,14 @@
 [project]
-name = "codex-workers-sdk-py"
+name = "workers-core"
 version = "0.1.0"
-description = "Codex Workflows Python Workers SDK"
+description = "Workers Core SDK - Python implementation for workflow functions"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
   "grpcio>=1.60",
   "grpcio-tools>=1.60",
   "pydantic>=2",
+  "python-dotenv>=1.0.0",
 ]
 
 [build-system]

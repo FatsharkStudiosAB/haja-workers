@@ -1,13 +1,37 @@
-# Codex Workflows Python Workers
+# Workers - Python Implementation
 
-A Python-based worker implementation for Codex Workflows that provides function execution capabilities via gRPC communication.
+A clean, standard Python implementation for building and running workflow functions.
 
 ## Architecture
 
-This project consists of two Python packages:
+This project follows Python packaging best practices with two packages:
 
-- **SDK** (`/sdk`): `codex-workers-sdk-py` - Reusable library for building workflow functions
-- **Server** (`/server`): `codex-workers-server-py` - Runnable worker server with examples
+- **SDK** (`/sdk`): `workers-core` - Reusable library for building workflow functions
+- **Server** (`/server`): `workers-server` - Runnable worker server with examples
+
+## Project Structure
+
+```
+python/
+├── sdk/                           # Core SDK package
+│   ├── src/workers_core/          # Main SDK implementation
+│   │   ├── __init__.py           # Clean API surface
+│   │   ├── sdk.py                # Server class
+│   │   ├── function.py           # Function builders
+│   │   ├── config.py             # Configuration
+│   │   ├── communication/        # gRPC communication
+│   │   ├── state/                # State management  
+│   │   ├── handlers/             # Request handlers
+│   │   ├── types/                # Type definitions
+│   │   └── [other modules...]    # Core functionality
+│   └── pyproject.toml            # SDK package definition
+└── server/                       # Executable server
+    ├── src/workers_server/       # Server implementation
+    │   ├── __init__.py
+    │   ├── main.py               # Main entry point
+    │   └── examples/             # Server examples
+    └── pyproject.toml            # Server package (depends on SDK)
+```
 
 ## Quick Start
 
@@ -19,7 +43,7 @@ This project consists of two Python packages:
 
 ### Installation & Usage
 
-#### Option 1: Direct GitHub Installation (Recommended)
+#### Option 1: Development Installation (Recommended)
 
 ```bash
 # Clone the repository
@@ -30,20 +54,18 @@ cd haja-workers/python
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Install SDK and server
+# Install SDK and server in editable mode
 pip install -e ./sdk
 pip install -e ./server
 
 # Run the worker
-python -m codex_workers_server.main
+workers-server
 
-# Or use the console script
-codex-worker
+# Or run directly
+python -m workers_server.main
 ```
 
 #### Option 2: Install from Local Path
-
-If you have the code locally but want to install as packages:
 
 ```bash
 # Install SDK first
@@ -53,25 +75,7 @@ pip install /path/to/haja-workers/python/sdk
 pip install /path/to/haja-workers/python/server
 
 # Run
-codex-worker
-```
-
-#### Option 3: Development Installation
-
-For active development:
-
-```bash
-cd haja-workers/python
-
-# Install in editable mode with development dependencies
-pip install -e "./sdk[dev]"
-pip install -e "./server[dev]"
-
-# Run with environment variables
-export SERVER_NAME="my-python-worker"
-export GRPC_SERVER_ADDRESS="localhost:9090"
-export SERVER_API_TOKEN="your-token-here"
-python -m codex_workers_server.main
+workers-server
 ```
 
 ### Example Usage
@@ -82,8 +86,7 @@ Create a custom worker with your own functions:
 # my_worker.py
 import asyncio
 from dataclasses import dataclass
-from codex_workers_sdk.sdk import Server
-from codex_workers_sdk.function import Function
+from workers_core import Server, Function
 
 @dataclass
 class GreetingInput:
@@ -114,12 +117,6 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-Run your custom worker:
-
-```bash
-python my_worker.py
-```
-
 ## Configuration
 
 ### Environment Variables
@@ -134,8 +131,7 @@ python my_worker.py
 ### Configuration via Code
 
 ```python
-from codex_workers_sdk.config import Config
-from codex_workers_sdk.sdk import Server
+from workers_core import Config, Server
 
 config = Config(
     server_name="my-custom-worker",
@@ -145,22 +141,6 @@ config = Config(
 )
 
 server = Server(config)
-```
-
-## Docker Usage
-
-```bash
-# Navigate to server directory
-cd server
-
-# Build Docker image
-docker build -t my-codex-worker .
-
-# Run with environment variables
-docker run -e SERVER_NAME=my-worker \
-           -e GRPC_SERVER_ADDRESS=host.docker.internal:9090 \
-           -e SERVER_API_TOKEN=your-token \
-           my-codex-worker
 ```
 
 ## Development
@@ -182,10 +162,6 @@ pip install -e ./server
 
 # Install development tools (optional)
 pip install black isort mypy pytest
-
-# Run tests
-python -m pytest sdk/tests/
-python -m pytest server/tests/
 ```
 
 ### Creating Custom Functions
@@ -194,7 +170,7 @@ python -m pytest server/tests/
 
 ```python
 from dataclasses import dataclass
-from codex_workers_sdk.function import Function
+from workers_core import Function
 
 @dataclass
 class MyInput:
@@ -218,96 +194,26 @@ def my_function():
     return fn.with_handler(handler)
 ```
 
-#### Function with State Access
+## API Reference
 
-```python
-async def advanced_handler(inputs: MyInput, event, gs) -> MyOutput:
-    # Access workflow information
-    workflow_id = event.workflow
-    
-    # Use gRPC cache
-    cached_data = await gs.grpc_cache.get("my_key")
-    
-    # Use gRPC store for persistence
-    await gs.grpc_store.set(workflow_id, "key", b"data")
-    
-    # Use RPC client to call other services
-    # response = await gs.rpc_client.call(...)
-    
-    return MyOutput(result="Advanced processing complete")
-```
+### Main Classes
 
-#### Function with Caching
+- `workers_core.Server` - Main server class for running workers
+- `workers_core.Function` - Function builder with full access to global state
+- `workers_core.SimpleFunction` - Simplified function builder
+- `workers_core.Config` - Configuration class
 
-```python
-def cached_function():
-    return Function[MyInput, MyOutput](
-        name="cached_function",
-        version="1.0.0", 
-        description="Function with custom cache TTL"
-    ).with_handler(my_handler).with_cache_ttl(60)  # 60 second cache
-```
+### Key Improvements
 
-## Package Structure
+This restructured implementation provides:
 
-```
-workflows/workers/python/
-├── sdk/                           # Reusable SDK library
-│   ├── pyproject.toml            # SDK package definition
-│   ├── src/codex_workers_sdk/    # SDK source code
-│   │   ├── sdk.py                # Main server class
-│   │   ├── function.py           # Function builders
-│   │   ├── config.py             # Configuration
-│   │   ├── communication/        # gRPC communication
-│   │   ├── state/                # Global state management
-│   │   ├── types/                # Type definitions
-│   │   └── workflowsgrpc/        # Generated gRPC stubs
-│   └── README.md                 # SDK documentation
-└── server/                       # Runnable worker server
-    ├── pyproject.toml            # Server package definition
-    ├── src/codex_workers_server/ # Server source code
-    │   ├── main.py               # Server entrypoint
-    │   └── examples/             # Example functions
-    ├── Dockerfile                # Container build
-    └── docker-compose.yml        # Local development
-```
-
-## Alternative Installation Methods
-
-### Using uv (Fast Python Package Manager)
-
-```bash
-# Install uv if you don't have it
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Create project and install
-uv venv
-source .venv/bin/activate
-uv pip install -e ./sdk -e ./server
-```
-
-### Using Poetry
-
-```bash
-# In your project directory
-poetry init
-poetry add codex-workers-sdk-py @ {path = "/path/to/sdk", develop = true}
-poetry add codex-workers-server-py @ {path = "/path/to/server", develop = true}
-poetry install
-poetry run codex-worker
-```
-
-### Using pip with Git URLs (Future)
-
-When published to a Git repository:
-
-```bash
-# Install SDK
-pip install git+https://github.com/FatsharkStudiosAB/haja-workers.git#subdirectory=python/sdk
-
-# Install server  
-pip install git+https://github.com/FatsharkStudiosAB/haja-workers.git#subdirectory=python/server
-```
+✅ **Standard Python Packaging** - Follows Python packaging best practices  
+✅ **Clean API Surface** - Simple imports: `from workers_core import Server, Function`  
+✅ **Proper Dependencies** - Server depends on SDK, no code duplication  
+✅ **Editable Installation** - Easy development workflow  
+✅ **Console Scripts** - `workers-server` command available after installation  
+✅ **Type Safety** - Full type hints throughout  
+✅ **Lazy Imports** - No import errors during development  
 
 ## Troubleshooting
 
@@ -316,40 +222,15 @@ pip install git+https://github.com/FatsharkStudiosAB/haja-workers.git#subdirecto
 **Import Errors**: Make sure both SDK and server are installed:
 ```bash
 pip install -e ./sdk -e ./server
-python -c "import codex_workers_sdk, codex_workers_server; print('OK')"
+python -c "import workers_core, workers_server; print('OK')"
 ```
 
 **Module Not Found**: Verify the packages are installed in the correct environment:
 ```bash
-pip list | grep codex-workers
+pip list | grep workers
 ```
 
 **Connection Issues**: Check your gRPC server address and ensure the Codex Workflows server is running.
-
-**Authentication Errors**: Verify `SERVER_API_TOKEN` is set correctly if required.
-
-### Debug Mode
-
-Enable verbose logging:
-
-```python
-import logging
-logging.basicConfig(level=logging.DEBUG)
-```
-
-Or set environment variable:
-```bash
-export CODEX_LOG_LEVEL=DEBUG
-python -m codex_workers_server.main
-```
-
-## Examples
-
-See the `server/src/codex_workers_server/examples/` directory for:
-
-- `input.py` - Simple input/output function
-- `store_chat_history.py` - Function using persistent storage
-- `random_output.py` - Function with caching behavior
 
 ## License
 

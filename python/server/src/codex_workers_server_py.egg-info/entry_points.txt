@@ -1,2 +1,0 @@
-[console_scripts]
-codex-worker = codex_workers_server.main:main
