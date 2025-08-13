@@ -124,7 +124,7 @@ if __name__ == "__main__":
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SERVER_NAME` | `python-execution-server` | Unique identifier for this worker |
-| `GRPC_SERVER_ADDRESS` | `localhost:9090` | Address of the Codex Workflows server |
+| `GRPC_SERVER_ADDRESS` | `localhost:50051` | Address of the Codex Workflows server |
 | `SERVER_API_TOKEN` | _(empty)_ | Authentication token (optional) |
 | `CACHE_TTL_SECONDS` | `300` | Default cache TTL for functions |
 
@@ -135,12 +135,32 @@ from workers_core import Config, Server
 
 config = Config(
     server_name="my-custom-worker",
-    grpc_server_address="localhost:9090",
+    grpc_server_address="localhost:50051",
     server_api_token="your-token",
     cache_ttl_seconds=600
 )
 
 server = Server(config)
+```
+
+### .env File Configuration
+
+The configuration loader searches for `.env` files in this order:
+
+1. **Current working directory upward** (using standard .env discovery)
+2. **Project root**: `/path/to/haja-workers/.env` (recommended)
+3. **Python directory**: `/path/to/haja-workers/python/.env`
+4. **Package directory**: `/path/to/haja-workers/python/sdk/.env`
+
+**Recommended .env file location**: Place at project root for entire project or in `python/` directory for Python-specific configuration.
+
+Example `.env` file:
+```bash
+# Workers Configuration
+SERVER_NAME=my-python-worker
+GRPC_SERVER_ADDRESS=localhost:50051
+SERVER_API_TOKEN=your-token-here
+CACHE_TTL_SECONDS=300
 ```
 
 ## Development
@@ -201,7 +221,14 @@ def my_function():
 - `workers_core.Server` - Main server class for running workers
 - `workers_core.Function` - Function builder with full access to global state
 - `workers_core.SimpleFunction` - Simplified function builder
+- `workers_core.FunctionInterface` - Base interface for function implementations
 - `workers_core.Config` - Configuration class
+- `workers_core.load_config` - Configuration loader with .env support
+
+### Type Classes
+
+- `workers_core.EventMessage` - Event message type for function handlers
+- `workers_core.EventState` - Event state information
 
 ### Key Improvements
 
@@ -222,7 +249,7 @@ This restructured implementation provides:
 **Import Errors**: Make sure both SDK and server are installed:
 ```bash
 pip install -e ./sdk -e ./server
-python -c "import workers_core, workers_server; print('OK')"
+python -c "from workers_core import Server, Function; print('✅ All imports successful!')"
 ```
 
 **Module Not Found**: Verify the packages are installed in the correct environment:
@@ -231,6 +258,20 @@ pip list | grep workers
 ```
 
 **Connection Issues**: Check your gRPC server address and ensure the Codex Workflows server is running.
+
+**Testing the Server**: You can test the server startup with:
+```bash
+# Run for a few seconds to test startup
+timeout 5s workers-server || echo "Server started successfully"
+```
+
+The server will show output like:
+```
+[INFO] workers_core.config: Loaded .env from /path/to/.env
+[INFO] workers_core.config: Config loaded: server_name=my-worker grpc_server_address=localhost:50051
+Server 'my-worker' registered with workflow server
+[INFO] workers_core.communication.grpc_communicator: GrpcCommunicator: connecting to localhost:50051
+```
 
 ## License
 

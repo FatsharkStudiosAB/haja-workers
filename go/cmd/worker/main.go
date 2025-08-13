@@ -4,7 +4,7 @@ import (
 	"log"
 
 	sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
-	"github.com/FatsharkStudiosAB/haja-workers/go/worker/examples"
+	"github.com/FatsharkStudiosAB/haja-workers/go/cmd/worker/examples"
 
 	"github.com/joho/godotenv"
 )

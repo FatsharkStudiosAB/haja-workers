@@ -24,11 +24,10 @@ This project follows Go project layout conventions with clear separation of conc
 ```bash
 # Clone the repository
 git clone https://github.com/FatsharkStudiosAB/haja-workers.git
-cd haja-workers/go
+cd haja-workers
 
 # Build the worker
-cd cmd/worker
-go build -o codex-worker .
+go build -o codex-worker ./go/cmd/worker
 
 # Run with environment variables
 export SERVER_NAME="my-go-worker"
@@ -42,7 +41,7 @@ export SERVER_API_TOKEN="your-token-here"
 ```bash
 # In your Go project
 go mod init my-worker
-go get github.com/FatsharkStudiosAB/haja-workers/go/sdk@latest
+go get github.com/FatsharkStudiosAB/haja-workers@latest
 
 # Create main.go (see example below)
 go run main.go
@@ -56,11 +55,10 @@ Create a simple worker with custom functions:
 package main
 
 import (
+    "fmt"
     "log"
     
     sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
-    "github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
-    "github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
 )
 
 type GreetingInput struct {
@@ -139,11 +137,13 @@ Following Go project layout conventions, the codebase is organized as follows:
 ├── sdk/                    # Public API for users
 │   ├── sdk.go              # Main SDK interface
 │   ├── function.go         # Function builder
-│   └── config.go           # Configuration
+│   ├── config.go           # Configuration
+│   ├── basefunction/       # Function implementation infrastructure (SDK)
+│   └── state/              # Global state management (SDK)
 └── internal/               # Private implementation
     ├── types/              # Core types (EventMessage, etc.)
-    ├── basefunction/       # Function implementation infrastructure  
-    ├── state/              # Global state management
+    ├── basefunction/       # Function implementation infrastructure (Internal)
+    ├── state/              # Global state management (Internal)
     ├── communication/      # gRPC communication layer
     ├── handlers/           # Event handlers
     ├── dispatcher/         # Event dispatching
@@ -151,6 +151,12 @@ Following Go project layout conventions, the codebase is organized as follows:
     ├── rpc/                # RPC client
     ├── grpccache/          # Cache client
     ├── grpcstore/          # Store client
+    ├── models/             # Data models
+    ├── utils/              # Utility functions
+    ├── hash/               # Hashing utilities
+    ├── maps/               # Map utilities
+    ├── message/            # Message handling
+    ├── initialize/         # Initialization utilities
     └── workflowsgrpc/      # gRPC protocol implementation
 ```
 
@@ -160,6 +166,8 @@ Following Go project layout conventions, the codebase is organized as follows:
 - `internal/` contains implementation details not exposed to users
 - No circular dependencies between modules
 
+**Note:** Currently `basefunction/` and `state/` exist in both `sdk/` and `internal/`. This duplication may be refactored in future versions for cleaner separation.
+
 ## Original Development Notes
 
 ### Local Development Setup
@@ -167,16 +175,13 @@ Following Go project layout conventions, the codebase is organized as follows:
 ```bash
 # Clone and navigate
 git clone https://github.com/FatsharkStudiosAB/haja-workers.git
-cd haja-workers/go
+cd haja-workers
 
-# Install dependencies for all modules
-cd internal && go mod tidy
-cd ../sdk && go mod tidy  
-cd ../cmd/worker && go mod tidy
+# Install dependencies
+go mod tidy
 
 # Build and test
-cd ../cmd/worker
-go build ./...
+go build ./go/cmd/worker
 go test ./...
 ```
 
@@ -219,11 +224,17 @@ workflows/workers/go/
 │   ├── sdk.go                     # Main SDK interface
 │   ├── function.go                # Function builders
 │   ├── config.go                  # Configuration options
+│   ├── basefunction/              # Function infrastructure
+│   ├── state/                     # State management
 │   └── README.md                  # SDK documentation
+├── internal/                      # Private implementation
+│   ├── go.mod                     # Internal module definition
+│   └── [various packages...]     # Implementation details
 └── cmd/worker/                    # Runnable worker server
     ├── go.mod                     # Worker module definition
     ├── main.go                    # Server entrypoint
     ├── examples/                  # Example functions
+    ├── functions/                 # Demo functions
     ├── Dockerfile                 # Container build
     └── docker-compose.yml         # Local development
 ```
@@ -234,6 +245,7 @@ workflows/workers/go/
 
 **Import Resolution Errors**: Make sure you're using the correct module paths:
 - SDK: `github.com/FatsharkStudiosAB/haja-workers/go/sdk`
+- Worker Examples: `github.com/FatsharkStudiosAB/haja-workers/go/cmd/worker/examples`
 - Internal packages: `github.com/FatsharkStudiosAB/haja-workers/go/internal/...` (only for internal development)
 
 **Connection Failures**: Verify your `GRPC_SERVER_ADDRESS` points to a running Codex Workflows server.

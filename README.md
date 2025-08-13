@@ -16,6 +16,12 @@ This repository contains the Haja Workers SDK, providing both Go and Python impl
 ## Getting Started
 
 ### Go Workers
+
+**Installation:**
+```bash
+go get github.com/FatsharkStudiosAB/haja-workers@latest
+```
+
 See [go/README.md](go/README.md) for Go-specific documentation.
 
 ### Python Workers
