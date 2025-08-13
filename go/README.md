@@ -19,29 +19,10 @@ This project follows Go project layout conventions with clear separation of conc
 
 ### Installation & Usage
 
-#### Option 1: Direct GitHub Installation (Recommended)
-
-```bash
-# Clone the repository
-git clone https://github.com/FatsharkStudiosAB/haja-workers.git
-cd haja-workers
-
-# Build the worker
-go build -o codex-worker ./go/cmd/worker
-
-# Run with environment variables
-export SERVER_NAME="my-go-worker"
-export GRPC_SERVER_ADDRESS="localhost:9090"
-export SERVER_API_TOKEN="your-token-here"
-./codex-worker
-```
-
-#### Option 2: Using Go Modules in Your Project
-
 ```bash
 # In your Go project
 go mod init my-worker
-go get github.com/FatsharkStudiosAB/haja-workers@latest
+go get github.com/FatsharkStudiosAB/haja-workers/go
 
 # Create main.go (see example below)
 go run main.go
@@ -58,7 +39,7 @@ import (
     "fmt"
     "log"
     
-    sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+    "github.com/FatsharkStudiosAB/haja-workers/go"
 )
 
 type GreetingInput struct {
@@ -71,16 +52,16 @@ type GreetingOutput struct {
 
 func main() {
     // Create server
-    server, err := sdk.New(
-        sdk.WithServerName("my-custom-worker"),
-        sdk.WithGrpcServerAddress("localhost:9090"),
+    server, err := worker.New(
+        worker.WithServerName("my-custom-worker"),
+        worker.WithGrpcServerAddress("localhost:50051"),
     )
     if err != nil {
         log.Fatal("Failed to create server:", err)
     }
 
     // Register a simple function
-    greetingFn := sdk.NewSimpleFunction[GreetingInput, GreetingOutput](
+    greetingFn := worker.NewSimpleFunction[GreetingInput, GreetingOutput](
         "greeting", "1.0.0", "Generate a greeting message",
     ).WithHandler(func(input GreetingInput) (GreetingOutput, error) {
         return GreetingOutput{
@@ -105,7 +86,7 @@ func main() {
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SERVER_NAME` | `codex-go-worker` | Unique identifier for this worker |
-| `GRPC_SERVER_ADDRESS` | `localhost:9090` | Address of the Codex Workflows server |
+| `GRPC_SERVER_ADDRESS` | `localhost:50051` | Address of the Codex Workflows server |
 | `SERVER_API_TOKEN` | _(empty)_ | Authentication token (optional) |
 
 ### Docker Usage
@@ -117,7 +98,7 @@ docker build -t my-codex-worker .
 
 # Run with environment variables
 docker run -e SERVER_NAME=my-worker \
-           -e GRPC_SERVER_ADDRESS=host.docker.internal:9090 \
+           -e GRPC_SERVER_ADDRESS=host.docker.internal:50051 \
            -e SERVER_API_TOKEN=your-token \
            my-codex-worker
 ```
@@ -161,12 +142,11 @@ Following Go project layout conventions, the codebase is organized as follows:
 ```
 
 **Key Principles:**
-- `cmd/worker/main.go` is minimal - only imports SDK and registers functions
-- `sdk/` contains public APIs that external developers use
+- `cmd/worker/main.go` is minimal - only imports worker package and registers functions
+- Root `/go/` directory contains the public worker API that external developers use
 - `internal/` contains implementation details not exposed to users
-- No circular dependencies between modules
-
-**Note:** Currently `basefunction/` and `state/` exist in both `sdk/` and `internal/`. This duplication may be refactored in future versions for cleaner separation.
+- `basefunction/` and `state/` provide SDK-level infrastructure for function development
+- Clean module structure with single `go.mod` for easy dependency management
 
 ## Original Development Notes
 
@@ -180,8 +160,14 @@ cd haja-workers
 # Install dependencies
 go mod tidy
 
-# Build and test
-go build ./go/cmd/worker
+# Build the worker package
+cd go
+go build .
+
+# Build the worker executable
+go build ./cmd/worker
+
+# Run tests
 go test ./...
 ```
 
@@ -193,7 +179,7 @@ The SDK provides two types of functions:
 For basic input → output transformations:
 
 ```go
-fn := sdk.NewSimpleFunction[Input, Output](name, version, description)
+fn := worker.NewSimpleFunction[Input, Output](name, version, description)
     .WithHandler(func(input Input) (Output, error) {
         // Your logic here
         return output, nil
@@ -205,7 +191,7 @@ fn := sdk.NewSimpleFunction[Input, Output](name, version, description)
 For functions needing access to workflow context:
 
 ```go
-fn := sdk.NewFunction[Input, Output](name, version, description)
+fn := worker.NewFunction[Input, Output](name, version, description)
     .WithHandler(func(input Input, event *types.EventMessage, gs *state.GlobalState) (Output, error) {
         // Access workflow info: event.Workflow, event.Node, etc.
         // Use RPC client: gs.RpcClient
@@ -219,19 +205,15 @@ fn := sdk.NewFunction[Input, Output](name, version, description)
 
 ```
 workflows/workers/go/
-├── sdk/                           # Reusable SDK library
-│   ├── go.mod                     # SDK module definition
-│   ├── sdk.go                     # Main SDK interface
-│   ├── function.go                # Function builders
-│   ├── config.go                  # Configuration options
-│   ├── basefunction/              # Function infrastructure
-│   ├── state/                     # State management
-│   └── README.md                  # SDK documentation
-├── internal/                      # Private implementation
-│   ├── go.mod                     # Internal module definition
-│   └── [various packages...]     # Implementation details
+├── go.mod                         # Worker SDK module definition
+├── sdk.go                         # Main worker API interface
+├── function.go                    # Function builders
+├── config.go                      # Configuration options
+├── basefunction/                  # Function infrastructure
+├── state/                         # State management
+├── internal/                      # Private implementation details
+│   └── [various packages...]     # Internal types, communication, etc.
 └── cmd/worker/                    # Runnable worker server
-    ├── go.mod                     # Worker module definition
     ├── main.go                    # Server entrypoint
     ├── examples/                  # Example functions
     ├── functions/                 # Demo functions
@@ -244,7 +226,7 @@ workflows/workers/go/
 ### Common Issues
 
 **Import Resolution Errors**: Make sure you're using the correct module paths:
-- SDK: `github.com/FatsharkStudiosAB/haja-workers/go/sdk`
+- Worker SDK: `github.com/FatsharkStudiosAB/haja-workers/go`
 - Worker Examples: `github.com/FatsharkStudiosAB/haja-workers/go/cmd/worker/examples`
 - Internal packages: `github.com/FatsharkStudiosAB/haja-workers/go/internal/...` (only for internal development)
 

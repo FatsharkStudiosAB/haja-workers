@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+	worker "github.com/FatsharkStudiosAB/haja-workers/go"
 	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
 	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 )
@@ -21,8 +21,8 @@ type StoreChatHistoryOutputs struct {
 }
 
 // StoreChatHistoryFunction appends input text to per-workflow history using the gRPC store
-func StoreChatHistoryFunction() sdk.FunctionBuilder {
-	return sdk.NewFunction[StoreChatHistoryInputs, StoreChatHistoryOutputs](
+func StoreChatHistoryFunction() worker.FunctionBuilder {
+	return worker.NewFunction[StoreChatHistoryInputs, StoreChatHistoryOutputs](
 		"store_chat_history",
 		"1.0.0",
 		"Appends the input text to a per-workflow chat history stored via gRPC store and returns the full history.",

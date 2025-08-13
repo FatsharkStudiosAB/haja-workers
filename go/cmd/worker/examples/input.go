@@ -3,7 +3,7 @@ package examples
 import (
 	"fmt"
 
-	sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+	worker "github.com/FatsharkStudiosAB/haja-workers/go"
 	"github.com/FatsharkStudiosAB/haja-workers/go/internal/state"
 	"github.com/FatsharkStudiosAB/haja-workers/go/internal/types"
 )
@@ -20,8 +20,8 @@ type InputFunctionOutputs struct {
 }
 
 // InputFunction registers an example input function using the SDK
-func InputFunction() sdk.FunctionBuilder {
-	return sdk.NewFunction[InputFunctionInputs, InputFunctionOutputs](
+func InputFunction() worker.FunctionBuilder {
+	return worker.NewFunction[InputFunctionInputs, InputFunctionOutputs](
 		"example_input",
 		"1.0.0",
 		"Takes an input as a text and returns the same text as output.",

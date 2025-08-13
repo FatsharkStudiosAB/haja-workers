@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	sdk "github.com/FatsharkStudiosAB/haja-workers/go/sdk"
+	worker "github.com/FatsharkStudiosAB/haja-workers/go"
 	"github.com/FatsharkStudiosAB/haja-workers/go/cmd/worker/examples"
 
 	"github.com/joho/godotenv"
@@ -16,7 +16,7 @@ func main() {
 	}
 
 	// Create server with custom configuration
-	server, err := sdk.New()
+	server, err := worker.New()
 	if err != nil {
 		log.Fatal("Failed to create server:", err)
 	}
